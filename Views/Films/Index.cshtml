@@ -1,0 +1,122 @@
+﻿@using MVCFilmTicketStore.DataTypes.Enums;
+@model MVCFilmTicketStore.ViewModels.FilmGenreFilterViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+@if (User.Identity.IsAuthenticated && (User.IsInRole("Admin")))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
+
+<form asp-controller="Films" asp-action="Index" method="get">
+    <p>
+        <select asp-for="FilterString" asp-items="Model.Genres">
+            <option value="">All</option>
+        </select>
+        Title: <input type="text" asp-for="SearchString" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Films[0].Poster)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Films[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Films[0].ReleaseDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Films[0].FilmDuration)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Films[0].Decription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Films[0].Director)
+            </th>
+            <th>
+                Actors
+            </th>
+            <th>
+                Average Rating
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Films)
+        {
+            <tr>
+                <td>
+                    @{
+                        if (item.Poster != null)
+                        {
+                            <img src="~/files_images/@FolderType.POSTERS.ToString()/@item.Poster" height="300px" width="190px" asp-append-version="true" />
+                        }
+                        else
+                        {
+                            <img src="~/files_images/no_picture_found.jpg" height="300px" width="190px" asp-append-version="true" />
+                        }
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReleaseDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FilmDuration)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Decription)
+                </td>
+                <td>
+                    @if (item.DirectorId != null)
+                    {
+                        <a asp-controller="Directors" asp-action="Details" asp-route-id="@item.DirectorId"> @Html.DisplayFor(modelItem => item.Director.FullName)</a>
+                    }
+                </td>
+                <td>
+                    @foreach (var actor in item.ActorFilms)
+                    {
+                        <a asp-controller="Actors" asp-action="Details" asp-route-id="@actor.ActorId"> @actor.Actor.FullName </a> <br />
+                    }
+                </td>
+                @{
+                    var averageRating = item.Reviews?.Count > 0 ? item.Reviews.Average(r => r.Rating) : 0;
+                    if (averageRating == 0)
+                    {
+                        <td>No Reviews.</td>
+                    }
+                    else
+                    {
+                        <td>@Math.Round((decimal)averageRating, 2, MidpointRounding.AwayFromZero)</td>
+                    }
+                }
+                <td>
+                    @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin")))
+                    {
+                        <button class="btn btn-success"><a style="text-decoration: none; color: white" asp-action="Edit" asp-route-id="@item.Id">Edit</a></button>
+                    }
+                    <button class="btn btn-info"><a style="text-decoration: none; color: white" asp-action="Details" asp-route-id="@item.Id">Details</a></button>
+                    @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin")))
+                    {
+                                <button class="btn btn-danger"><a style="text-decoration: none; color: white" asp-action="Delete" asp-route-id="@item.Id">Delete</a></button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

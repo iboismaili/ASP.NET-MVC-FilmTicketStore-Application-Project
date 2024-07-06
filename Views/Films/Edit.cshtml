@@ -1,0 +1,93 @@
+﻿@model MVCFilmTicketStore.ViewModels.FilmActorsGenresEditViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Film</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Film.Id" />
+            <div class="form-group">
+                <label asp-for="Film.Title" class="control-label"></label>
+                <input asp-for="Film.Title" class="form-control" />
+                <span asp-validation-for="Film.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Film.ReleaseDate" class="control-label"></label>
+                <input asp-for="Film.ReleaseDate" class="form-control" />
+                <span asp-validation-for="Film.ReleaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Film.FilmDuration" class="control-label"></label>
+                <input asp-for="Film.FilmDuration" class="form-control" />
+                <span asp-validation-for="Film.FilmDuration" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Film.Decription" class="control-label"></label>
+                <input asp-for="Film.Decription" class="form-control" />
+                <span asp-validation-for="Film.Decription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Film.DownloadPosterUrl" class="control-label"></label>
+                <input asp-for="Film.DownloadPosterUrl" class="form-control" />
+                <span asp-validation-for="Film.DownloadPosterUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Film.DirectorId" class="control-label"></label>
+                <select asp-for="Film.DirectorId" class="form-control" asp-items="ViewBag.DirectorId"></select>
+                <span asp-validation-for="Film.DirectorId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Actors</label>
+                <select asp-for="SelectedActors" class="form-control js-example-basic-multiple"
+                        asp-items="Model.ActorList"> </select>
+                <span asp-validation-for="SelectedActors" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Genres</label>
+                <select asp-for="SelectedGenres" class="form-control js-example-basic-multiple"
+                        asp-items="Model.GenreList"> </select>
+                <span asp-validation-for="SelectedGenres" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Film.Poster" class="control-label"></label>
+                <p></p>
+                <input type="file" name="imageFile" />
+                @if (ViewBag.Message != null)
+                {
+                    <div class="alert" style="margin-top:20px">
+                        @ViewBag.Message
+                    </div>
+                }
+                <p></p>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#SelectedActors").select2();
+            $("#SelectedGenres").select2();
+        });
+    </script>
+}

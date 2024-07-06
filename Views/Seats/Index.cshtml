@@ -1,0 +1,51 @@
+﻿@model IEnumerable<MVCFilmTicketStore.Models.Seat>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+@if (User.Identity.IsAuthenticated && (User.IsInRole("Admin")))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Row)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Column)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Row)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Column)
+                </td>
+                <td>
+                    @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin")))
+                    {
+                        <button class="btn btn-success"><a style="text-decoration: none; color: white" asp-action="Edit" asp-route-id="@item.Id">Edit</a></button>
+                    }
+                    <button class="btn btn-info"><a style="text-decoration: none; color: white" asp-action="Details" asp-route-id="@item.Id">Details</a></button>
+                    @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin")))
+                    {
+                        <button class="btn btn-danger"><a style="text-decoration: none; color: white" asp-action="Delete" asp-route-id="@item.Id">Delete</a></button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
